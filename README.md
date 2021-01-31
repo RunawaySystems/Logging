@@ -1,5 +1,5 @@
 # RunawaySystems.Logging
-A simple structured logging library. Log entries currently contain timestamp, calling file, message string, and verbosity.
+A simple structured logging library. Log entries currently contain timestamp, calling file, message string, and verbosity. Nuget packages for extending this library to output to both Godot's and Unity's consoles are available.
 
 ### Configuration And Usage
 ![image](https://user-images.githubusercontent.com/73957583/106370966-f4aec900-6324-11eb-9359-39e0ce3538ce.png)

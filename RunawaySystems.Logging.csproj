@@ -1,8 +1,34 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <UserSecretsId>a1eaf407-bd93-4d51-96aa-f507dfc77a04</UserSecretsId>
+    <Version>0.2.0</Version>
+    <Company>Runaway Systems</Company>
+    <Authors>Nathan Lucci, Patrick Dowling</Authors>
+    <Description>A simple structured logging library. Log entries currently contain timestamp, calling file, message string, and verbosity.</Description>
+    <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <PackageTags>structured logging runaway systems</PackageTags>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/RunawaySystems/Logging</PackageProjectUrl>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Godot\**" />
+    <Compile Remove="Unity\**" />
+    <EmbeddedResource Remove="Godot\**" />
+    <EmbeddedResource Remove="Unity\**" />
+    <None Remove="Godot\**" />
+    <None Remove="Unity\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>

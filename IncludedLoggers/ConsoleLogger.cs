@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace RunawaySystems.Logging {
 
     /// <summary> Disyplays logs through the system's console/stdout. </summary>
-    public class ConsoleLogger {
+    public class ConsoleLogger : ILogger {
 
-        public ConsoleLogger() { Log.MessageLogged += WriteMessage; }
+        public ConsoleLogger() { Log.MessageLogged += Write; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void WriteMessage(LogEntry entry) {
+        public void Write(LogEntry entry) {
             System.Console.ForegroundColor = ConsoleColor.Gray;
             System.Console.Write($"[{DateTime.Now}] ");
 
@@ -46,6 +45,15 @@ namespace RunawaySystems.Logging {
                 default:
                     throw new NotImplementedException($"Logging verbosity {verbosity} is not known by the {nameof(ConsoleLogger)}!");
             };
+        }
+
+        public override bool Equals(object obj) => obj is ConsoleLogger;
+    }
+
+    public static partial class LoggerExtensions {
+        public static Logger WithConsoleLogging(this Logger logger) {
+            logger.Register(new ConsoleLogger());
+            return logger;
         }
     }
 }
