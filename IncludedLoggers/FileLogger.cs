@@ -14,7 +14,7 @@ namespace RunawaySystems.Logging {
 
         /// <summary> Creates log file and begins writing to it immediately. </summary>
         /// <param name="logDirectory"> Absolute path to the folder that will contain the log. </param>
-        /// <param name="logName"> Name of the file that will contain the log. </param>
+        /// <param name="logName"> Name of the file that will contain the log, do not include the file type. </param>
         public FileLogger(Uri logDirectory, string logName) {
             absolutePath = Path.Combine(logDirectory.AbsolutePath, $"{logName}.xml");
             try { stream = new FileStream(absolutePath, FileMode.Create); }
@@ -34,8 +34,6 @@ namespace RunawaySystems.Logging {
             Log.MessageLogged += Write;
             AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
         }
-
-
 
         void OnProcessExit(object sender, EventArgs arguments) => Close();
 

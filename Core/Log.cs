@@ -4,8 +4,8 @@ using System.IO;
 
 using RunawaySystems.Logging;
 
-/// <summary> Static utility class for sending logging events. </summary>
-/// <remarks> Kept out of the Logging namespace for easy access from the rest of the assembly. </remarks>
+/// <summary> Stateless handle for interacting with <see cref="RunawaySystems.Logging"/>. </summary>
+/// <remarks> Kept out of any namespace to avoid needing to include RunawaySystems.Logging in every file. (I hope you're logging in nearly every file) </remarks>
 public static class Log {
 
     public delegate void LogEntry(RunawaySystems.Logging.LogEntry entry);

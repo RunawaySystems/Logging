@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Xml;
 using System.Xml.Serialization;
-using System.Runtime.Serialization;
 using System.Xml.Schema;
 
 namespace RunawaySystems.Logging {
