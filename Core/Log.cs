@@ -1,18 +1,18 @@
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using System.IO;
+using System;
 
 using RunawaySystems.Logging;
 
 /// <summary> Stateless handle for interacting with <see cref="RunawaySystems.Logging"/>. </summary>
-/// <remarks> Kept out of any namespace to avoid needing to include RunawaySystems.Logging in every file. (I hope you're logging in nearly every file) </remarks>
+/// <remarks> Placed in the global namespace to avoid needing to include RunawaySystems.Logging in every file. (I hope you're logging in nearly every file) </remarks>
 public static class Log {
 
-    public delegate void LogEntry(RunawaySystems.Logging.LogEntry entry);
-    public static event LogEntry MessageLogged;
+    public static event Action<LogEntry> MessageLogged;
 
     static Log() {
-        System.AppDomain.CurrentDomain.UnhandledException += (sender, exception) => BroadcastLog($"{exception.ExceptionObject.GetType()}: {((System.Exception)exception.ExceptionObject).Message}", ((System.Exception)exception.ExceptionObject).TargetSite.DeclaringType.Name, Verbosity.Fatal);
+        AppDomain.CurrentDomain.UnhandledException += (sender, exception) => BroadcastLog($"{exception.ExceptionObject.GetType()}: {((System.Exception)exception.ExceptionObject).Message}", ((Exception)exception.ExceptionObject).TargetSite.DeclaringType.Name, Verbosity.Fatal);
     }
 
     [Conditional("DEBUG")]
@@ -27,6 +27,6 @@ public static class Log {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void BroadcastLog(string message, string callerPath, Verbosity verbosity) {
         string caller = Path.GetFileNameWithoutExtension(callerPath);
-        MessageLogged?.Invoke(new RunawaySystems.Logging.LogEntry(caller, System.DateTime.Now, verbosity, message));
+        MessageLogged?.Invoke(new LogEntry(caller, DateTime.Now, verbosity, message));
     }
 }

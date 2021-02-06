@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <UserSecretsId>a1eaf407-bd93-4d51-96aa-f507dfc77a04</UserSecretsId>
-    <Version>0.2.0</Version>
+    <Version>0.2.1</Version>
     <Company>Runaway Systems</Company>
     <Authors>Nathan Lucci, Patrick Dowling</Authors>
     <Description>A simple structured logging library. Log entries currently contain timestamp, calling file, message string, and verbosity.</Description>
