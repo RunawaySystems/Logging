@@ -61,7 +61,7 @@ namespace RunawaySystems.Logging {
     public static partial class LoggerExtensions {
         /// <summary> You can have as many <see cref="FileLogger"/>s as you like. </summary>
         public static Logger WithFileLogging(this Logger logger, Uri logDirectory, string logName) {
-            logger.Register(new FileLogger(logDirectory, logName));
+            Logger.Register(new FileLogger(logDirectory, logName));
             return logger;
         }
     }

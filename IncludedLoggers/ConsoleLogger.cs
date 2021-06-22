@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Text;
 using System.Runtime.CompilerServices;
 
 namespace RunawaySystems.Logging {
 
     /// <summary> Disyplays logs through the system's console/stdout. </summary>
     public class ConsoleLogger : ILogger {
-
         public ConsoleLogger() { Log.MessageLogged += Write; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -52,7 +52,7 @@ namespace RunawaySystems.Logging {
 
     public static partial class LoggerExtensions {
         public static Logger WithConsoleLogging(this Logger logger) {
-            logger.Register(new ConsoleLogger());
+            Logger.Register(new ConsoleLogger());
             return logger;
         }
     }

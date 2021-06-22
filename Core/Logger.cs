@@ -8,19 +8,20 @@ namespace RunawaySystems.Logging {
     /// </summary>
     public class Logger {
 
+        private static Logger instance;
         private List<ILogger> loggers;
 
         public static Logger Initialize() {
-            var logger = new Logger();
-            logger.loggers = new List<ILogger>();
-            return logger;
+            instance = new Logger();
+            instance.loggers = new List<ILogger>();
+            return instance;
         }
 
-        public void Register(ILogger logger) {
-            if (loggers.Contains(logger))
+        public static void Register(ILogger logger) {
+            if (instance.loggers.Contains(logger))
                 throw new ArgumentException($"Identical logger already exists for {logger}");
 
-            loggers.Add(logger);
+            instance.loggers.Add(logger);
         }
     }
 }
