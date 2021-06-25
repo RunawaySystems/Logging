@@ -5,8 +5,7 @@ namespace RunawaySystems.Logging {
     /// <summary> Output target for Unity's log.txt file, and also the editor console if running from the editor. </summary>
     public class UnityLogger : ILogger {
 
-        private int fontSize;
-
+        #region Constants
         private static readonly string lightThemeTypeColor = "<color=#008060>";
         private static readonly string lightThemeFatalColor = "<color=#A729C6>";
         private static readonly string lightThemeErrorColor = "<color=#FF0000>";
@@ -23,15 +22,8 @@ namespace RunawaySystems.Logging {
         private static readonly string darkThemeDebugColor = "<color=#7F7F7F>";
         private static readonly string darkThemeTraceColor = "<color=#7F7F7F>";
 
-        private StringBuilder logWriter = new StringBuilder();
-
-        public UnityLogger(int fontSize = 14) {
-            this.fontSize = fontSize;
-            Log.MessageLogged += Write;
-        }
-
         /// <summary> Dictionary holding predefined color/label string for every verbosity level. Prevents constantly making new strings, and should be as fast as switch. </summary>
-        private static readonly Dictionary<Verbosity, string> lightThemeVerbosityString = new Dictionary<Verbosity, string> {
+        private static readonly Dictionary<Verbosity, string> lightThemeVerbosityColors = new Dictionary<Verbosity, string> {
             [Verbosity.Fatal] = lightThemeFatalColor,
             [Verbosity.Error] = lightThemeErrorColor,
             [Verbosity.Warning] = lightThemeWarningColor,
@@ -41,7 +33,7 @@ namespace RunawaySystems.Logging {
         };
 
         /// <summary> Dictionary holding predefined color/label string for every verbosity level. Prevents constantly making new strings, and should be as fast as switch. </summary>
-        private static readonly Dictionary<Verbosity, string> darkThemeVerbosityString = new Dictionary<Verbosity, string> {
+        private static readonly Dictionary<Verbosity, string> darkThemeVerbosityColors = new Dictionary<Verbosity, string> {
             [Verbosity.Fatal] = darkThemeFatalColor,
             [Verbosity.Error] = darkThemeErrorColor,
             [Verbosity.Warning] = darkThemeWarningColor,
@@ -49,28 +41,53 @@ namespace RunawaySystems.Logging {
             [Verbosity.Debug] = darkThemeDebugColor,
             [Verbosity.Trace] = darkThemeTraceColor
         };
+        #endregion Constants
+
+        #region Parameters
+        private int fontSize;
+        private bool includeWriteTime;
+        private bool includeCaller;
+        private bool includeVerbosity;
+        #endregion Parameters
+
+        // state
+        private StringBuilder logWriter = new StringBuilder();
+
+        public UnityLogger(int fontSize, bool includeWriteTime = false, bool includeCaller = true, bool includeVerbosity = false) {
+            this.fontSize = fontSize;
+            this.includeWriteTime = includeWriteTime;
+            this.includeCaller = includeCaller;
+            this.includeVerbosity = includeVerbosity;
+
+            Log.MessageLogged += Write;
+        }
 
         public void Write(LogEntry entry) {
+            // set the unity message icon on the far left to as large as is allowable, and then set the user's font size
             logWriter.Append($"<size=22> </size><size={fontSize}>");
 
             // format message colors for light or dark theme
             if (UnityEditor.EditorGUIUtility.isProSkin) { // dark skin
-                logWriter.Append(darkThemeTypeColor)
-                         .Append("<b>")
-                         .Append(entry.Caller)
-                         .Append(": </b></color>")
-                         .Append(darkThemeVerbosityString[entry.Verbosity]);
+                if (includeWriteTime)
+                    logWriter.Append($"{darkThemeTraceColor}[{entry.WriteTime}]</color> ");
+                if (includeCaller)
+                    logWriter.Append($"{darkThemeTypeColor}<b>{entry.Caller}: </b></color>");
+
+                logWriter.Append(darkThemeVerbosityColors[entry.Verbosity]);
             }
             else { // light skin 
-                logWriter.Append(lightThemeTypeColor)
-                         .Append("<b>")
-                         .Append(entry.Caller)
-                         .Append(": </b></color>")
-                         .Append(lightThemeVerbosityString[entry.Verbosity]);
+                if (includeWriteTime)
+                    logWriter.Append($"{lightThemeTraceColor}[{entry.WriteTime}]</color> ");
+                if (includeCaller)
+                    logWriter.Append($"{lightThemeTypeColor}<b>{entry.Caller}: </b></color>");
+
+                logWriter.Append(lightThemeVerbosityColors[entry.Verbosity]);
             }
 
-            logWriter.Append(entry.Message)
-                     .Append("</color></size>\n");
+            if (includeVerbosity)
+                logWriter.Append($"{entry.Verbosity}: ");
+
+            logWriter.Append($"{entry.Message}</color></size>\n");
 
             switch (entry.Verbosity) {
                 default:
@@ -96,8 +113,8 @@ namespace RunawaySystems.Logging {
 
     public static partial class LoggerExtensions {
         /// <inheritdoc cref="UnityLogger"/>
-        public static Logger WithUnityLogging(this Logger logger, int fontSize = 14) {
-            Logger.Register(new UnityLogger(fontSize));
+        public static Logger WithUnityLogging(this Logger logger, int fontSize = 14, bool includeWriteTime = false, bool includeCaller = true, bool includeVerbosity = false) {
+            Logger.Register(new UnityLogger(fontSize, includeWriteTime, includeCaller, includeVerbosity));
             return logger;
         }
     }

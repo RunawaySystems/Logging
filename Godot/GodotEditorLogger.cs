@@ -6,9 +6,9 @@ namespace RunawaySystems.Logging {
     public class GodotEditorLogger : ILogger {
 
         // parameters
-        bool includeWriteTime;
-        bool includeCaller;
-        bool includeVerbosity;
+        private bool includeWriteTime;
+        private bool includeCaller;
+        private bool includeVerbosity;
 
         // state
         private StringBuilder logWriter = new StringBuilder();
